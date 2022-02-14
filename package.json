@@ -1,0 +1,19 @@
+{
+  "name": "http-fetch-queue",
+  "version": "0.0.1",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/johnvmt/http-fetch-queue"
+  },
+  "author": {
+    "name": "John Murphy-Teixidor",
+    "email": "johnvmt@gmail.com"
+  },
+  "main": "src/HttpFetchQueue.js",
+  "dependencies": {
+    "abort-controller": "^3.0.0",
+    "jobs-queue": "^2.0.0",
+    "node-fetch": "^3.2.0"
+  }
+}
