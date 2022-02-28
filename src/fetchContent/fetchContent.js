@@ -47,10 +47,19 @@ const fetchContent = async (url, fetchOptions, contentOptions = {}) => {
     }
 
     try {
+        let fetchHeaders = {
+            ...fetchOptions.headers
+        };
+
+        // try if-none-match: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/If-None-Match
+        if(etag)
+            fetchHeaders['If-None-Match'] = etag;
+
         const response = await fetch(url, {
             signal,
             cache: "no-store",
-            ...fetchOptions
+            ...fetchOptions,
+            headers: fetchHeaders
         });
 
         const responseInfo = infoFromResponse(response);
