@@ -12,6 +12,8 @@ const getContentFromResponse = async (response, format) => {
         const responseArrayBuffer = await response.arrayBuffer();
         return Buffer.from(responseArrayBuffer).toString('base64');
     }
+    else if(response.headers.get('content-type').startsWith('application/json;'))
+        return await response.json();
     else
         return await response.text();
 }
@@ -23,6 +25,7 @@ const getContentFromResponse = async (response, format) => {
  */
 const infoFromResponse = (response) => {
     return {
+        headers: response.headers,
         etag: response.headers.get('etag')
     }
 }
