@@ -12,7 +12,7 @@ const getContentFromResponse = async (response, format) => {
         const responseArrayBuffer = await response.arrayBuffer();
         return Buffer.from(responseArrayBuffer).toString('base64');
     }
-    else if(response.headers.get('content-type').startsWith('application/json;'))
+    else if(format === "json" || response.headers.get('content-type').startsWith('application/json;'))
         return await response.json();
     else
         return await response.text();
