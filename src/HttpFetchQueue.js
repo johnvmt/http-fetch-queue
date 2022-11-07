@@ -7,20 +7,21 @@ class HttpFetchQueue extends JobsQueue {
 
         this._options = options;
 
-        HttpFetchQueue.validateJobOptions(this._options);
+        HttpFetchQueue.validateJobConfig(this._options);
     }
 
-    enqueue(url, fetchOptions, contentOptions, jobOptions = {}) {
-        const mergedJobOptions = {
+    enqueue(url, fetchOptions, contentOptions, jobConfig = {}) {
+        const mergedJobConfig = {
             ...this._options,
-            ...jobOptions
+            ...jobConfig
         };
 
-        HttpFetchQueue.validateJobOptions(mergedJobOptions);
+        HttpFetchQueue.validateJobConfig(mergedJobConfig);
 
         let attempt = 0;
 
         return super.enqueue({
+            ...mergedJobConfig,
             start: () => {
                 attempt++;
 
@@ -29,7 +30,7 @@ class HttpFetchQueue extends JobsQueue {
                     url: url,
                     fetchOptions: fetchOptions,
                     contentOptions: contentOptions,
-                    jobOptions: jobOptions
+                    jobConfig: jobConfig
                 });
 
                 return fetchContent(url, fetchOptions, contentOptions).then(response => {
@@ -38,15 +39,15 @@ class HttpFetchQueue extends JobsQueue {
                         url: url,
                         fetchOptions: fetchOptions,
                         contentOptions: contentOptions,
-                        jobOptions: jobOptions,
+                        jobConfig: jobConfig,
                         response: response
                     });
                     return response;
                 });
             },
             startFilter: () => {
-                return typeof mergedJobOptions.maxConcurrents === "number"
-                    ? this.running.size < mergedJobOptions.maxConcurrents // limit max concurrents
+                return typeof mergedJobConfig.maxConcurrents === "number"
+                    ? this.running.size < mergedJobConfig.maxConcurrents // limit max concurrents
                     : true;
             },
             retryFilter: (error) => {
@@ -55,22 +56,22 @@ class HttpFetchQueue extends JobsQueue {
                     url: url,
                     fetchOptions: fetchOptions,
                     contentOptions: contentOptions,
-                    jobOptions: jobOptions,
+                    jobConfig: jobConfig,
                     error: error
                 });
 
-                return typeof mergedJobOptions.maxAttempts === "number"
-                    ? attempt < mergedJobOptions.maxAttempts // limit max concurrents
+                return typeof mergedJobConfig.maxAttempts === "number"
+                    ? attempt < mergedJobConfig.maxAttempts // limit max concurrents
                     : false;
             }
         });
     }
 
-    static validateJobOptions(jobOptions) {
-        if(typeof jobOptions.maxConcurrents === "number" && jobOptions.maxConcurrents < 1)
+    static validateJobConfig(jobConfig) {
+        if(typeof jobConfig.maxConcurrents === "number" && jobConfig.maxConcurrents < 1)
             throw new Error("Invalid maxConcurrents option");
 
-        if(typeof jobOptions.maxAttempts === "number" && jobOptions.maxAttempts < 1)
+        if(typeof jobConfig.maxAttempts === "number" && jobConfig.maxAttempts < 1)
             throw new Error("Invalid maxAttempts option");
     }
 }

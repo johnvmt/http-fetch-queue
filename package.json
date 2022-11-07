@@ -1,6 +1,6 @@
 {
   "name": "http-fetch-queue",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "type": "module",
   "repository": {
     "type": "git",
@@ -13,7 +13,7 @@
   "main": "src/HttpFetchQueue.js",
   "dependencies": {
     "abort-controller": "^3.0.0",
-    "jobs-queue": "^2.0.0",
+    "jobs-queue": "^3.0.0",
     "node-fetch": "^3.2.4"
   }
 }
