@@ -24,6 +24,8 @@ const getContentFromResponse = async (response, format) => {
  * @returns {{etag: *}}
  */
 const infoFromResponse = (response) => {
+    console.log(response.headers);
+
     return {
         headers: response.headers,
         etag: response.headers.get('etag')
@@ -67,7 +69,7 @@ const fetchContent = async (url, fetchOptions, contentOptions = {}) => {
 
         const responseInfo = infoFromResponse(response);
 
-        if(etag !== undefined && responseInfo.etag === etag) { // etags match, abort
+        if(etag && responseInfo.etag === etag) { // etags match, abort
             controller.abort();
             return responseInfo;
         }
@@ -88,6 +90,6 @@ const fetchContent = async (url, fetchOptions, contentOptions = {}) => {
 }
 
 export {
-  fetchContent as default,
-  fetchContent
+    fetchContent as default,
+    fetchContent
 }
