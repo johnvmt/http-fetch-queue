@@ -24,8 +24,6 @@ const getContentFromResponse = async (response, format) => {
  * @returns {{etag: *}}
  */
 const infoFromResponse = (response) => {
-    console.log(response.headers);
-
     return {
         headers: response.headers,
         etag: response.headers.get('etag')
